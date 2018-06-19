@@ -1,2 +1,8 @@
+node_modules
 __pycache__
 db.sqlite3
+.*.swp
+.DS_Store
+
+client.key
+client.req

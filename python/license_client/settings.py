@@ -25,12 +25,13 @@ SECRET_KEY = 'f8sz5my!m8$s_^(4&k%$(_nf@*@y-zb__8@8=aapj+to0+as4#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'licenses.apps.LicensesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'license_client.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,9 +104,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -118,3 +119,36 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, 'node_modules'),
+]
+
+
+CA_PEM = b'''-----BEGIN CERTIFICATE-----
+MIIDcDCCAligAwIBAgIUIltzNXdzNq9M+5Bib15b2lUnuw8wDQYJKoZIhvcNAQEL
+BQAwcTELMAkGA1UEBhMCQ04xEjAQBgNVBAgMCUd1YW5nZG9uZzESMBAGA1UEBwwJ
+R3Vhbmd6aG91MQ0wCwYDVQQKDARWQ01ZMRAwDgYDVQQLDAdMaWNlbnNlMRkwFwYD
+VQQDDBBsaWNlbnNlLnZjbXkuY29tMCAXDTE4MDYxNDA0NDkwNloYDzIxMTgwNTIx
+MDQ0OTA2WjBxMQswCQYDVQQGEwJDTjESMBAGA1UECAwJR3Vhbmdkb25nMRIwEAYD
+VQQHDAlHdWFuZ3pob3UxDTALBgNVBAoMBFZDTVkxEDAOBgNVBAsMB0xpY2Vuc2Ux
+GTAXBgNVBAMMEGxpY2Vuc2UudmNteS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
+DwAwggEKAoIBAQDKYMEZffiwr4++ui84HBF+TLkM0VtkYSOj3p6Rg2PBfLp7GvjD
+EDY70aTRJAYOcXPH4INRU4l7TzrxLJxqKkE/e2KzJpJeZLX6JKUmthyIyLv943Tc
+yu4gILxrU77NwHfLTXbB7ZpHzu5tDmilJhMZUTnTAyv1J52tNLnLLNA2Na5goftg
+O/e1dEsDFq+REslgtmJwGDgxayUD5aNcBiAaMmTDYA1w/OJboCNB3NqWODHaGBwn
+XWGpDFSOp1cZDQxffbIlGuQwJdEHOxCq+MwCtqBbthwGOkEpHkwN3VwEors7xvAR
+IctBbx9HzuMRmfOy/wRn0pm7C4bMgjol20CtAgMBAAEwDQYJKoZIhvcNAQELBQAD
+ggEBAMi/neu9lyamNR79VdyuIFnA80vWodNw74NxjEUvBIBbYX6M+fX99drq9VND
+Mi1/pIqRVHQBh316ME6cO00tWV1i/xyJ+nfwz3Fdpl532+H/ljEORoY65khoaDUL
+QXHOG2RDHXhIjO+OfbShgnFk9f05m6c8ZZp18hOo3yBmrUJHgAlznkHmwy44Pg7r
+lMZbGkGeb2F74L+3pyF73hrgfS2ttEXsxBaMv9RHUFKClhSI375AUfQ0t/xi7Apd
+ivsi74XILvOaqUOnARFbwlGBrL7RPhY7ZLI1gTWkZOakJEr7H5aRN+J/8EWCLsi0
+YwuOUtWoezdck4D45acPSJ2/cew=
+-----END CERTIFICATE-----
+'''
+
+CLIENT_KEY_PATH = os.path.join(BASE_DIR, 'client.key')
+CLIENT_REQUEST_PATH = os.path.join(BASE_DIR, 'client.req')
+CLIENT_LICENSE_PATH = os.path.join(BASE_DIR, 'client.lic')

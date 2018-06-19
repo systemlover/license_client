@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}{% trans 'Add License' %}{% endblock %}
+
+
+{% block nav %}
+<li class="nav-item">
+    <a class="nav-link" href="{% url 'index' %}">
+        <span data-feather="home"></span>
+        {% trans 'Dashboard' %}
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" href="{% url 'licenses' %}">
+        <span data-feather="file-text"></span>
+        {% trans 'Licenses' %} <span class="sr-only">(current)</span>
+    </a>
+</li>
+{% endblock %}
+
+
+{% block main %}
+<h1 class="mt-3">{% trans 'Add License' %}</h1>
+<div class="mb-2">
+    <a class="btn btn-primary" href="{% url 'licenses' %}" role="button">Back</a>
+</div>
+<div class="card">
+    <div class="card-header">{% trans 'Operation Steps' %}</div>
+    <ol class="card-body">
+        <li class="mb-3">
+            <a class="btn btn-outline-primary" href="{% url 'request-license' %}" role="button">{% trans 'Download' %}</a>
+            {% trans 'license request file' %}
+        </li>
+        <li class="mb-3">
+            <a class="btn btn-outline-info" href="mailto:sales@vcmy.com" role="button">{% trans 'Send' %}</a>
+            {% trans 'license request file to us' %}
+        </li>
+        <li>
+            <form enctype="multipart/form-data" id="license-form" method="post">{% csrf_token %}
+                <div class="custom-file">
+                    <input type="file" accept=".lic" class="custom-file-input" id="license-file" name="license-file">
+                    <label class="custom-file-label" for="license-file">{% trans 'Import license file' %}</label>
+                </div>
+            </form>
+        </li>
+    </ol>
+</div>
+{% endblock %}
+
+
+{% block body-extra %}
+<script src="{% static 'js/license.js' %}"></script>
+{% endblock %}

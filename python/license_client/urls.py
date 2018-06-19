@@ -16,6 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from licenses.views import (IndexView, LicenseView,
+    LicenseDetailView, LicenseRequestView,)
+
 urlpatterns = [
+    path('', IndexView.as_view(), name='index'),
+    path('licenses/', LicenseView.as_view(), name='licenses'),
+    path('licenses/add/', LicenseDetailView.as_view(), name='add-license'),
+    path('licenses/request/', LicenseRequestView.as_view(), name='request-license'),
+
     path('admin/', admin.site.urls),
 ]
