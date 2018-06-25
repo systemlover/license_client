@@ -3,6 +3,10 @@ __pycache__
 db.sqlite3
 .*.swp
 .DS_Store
+.classpath
+.project
+.settings
+java/target/
 
 client.key
 client.req
