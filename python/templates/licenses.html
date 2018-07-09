@@ -43,8 +43,8 @@
             <tr>
                 <td>{{ license.id }}</td>
                 <td>{{ license.file_name }}</td>
-                <td>{{ license.valid_from|date:'Y-m-d H:i:s' }}</td>
-                <td>{{ license.valid_till|date:'Y-m-d H:i:s' }}</td>
+                <td>{{ license.not_before|date:'Y-m-d H:i:s' }}</td>
+                <td>{{ license.not_after|date:'Y-m-d H:i:s' }}</td>
                 <td>{{ license.imported_at|date:'Y-m-d H:i:s' }}</td>
             </tr>
             {% endfor %}

@@ -10,3 +10,7 @@ java/target/
 
 client.key
 client.req
+
+build/
+dist/
+vcmy_license.egg-info/
