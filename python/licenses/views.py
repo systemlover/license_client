@@ -1,6 +1,7 @@
 import logging
 import os.path
 import pytz
+from datetime import datetime
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -84,7 +85,10 @@ class LicenseDetailView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
-    def check_signature(self, client_license):
+    def verify(self, client_license, check_pubkey=True):
+        valid = True
+
+        # check if client_cert signed by ca
         ca_pem = x509.load_pem_x509_certificate(settings.CA_PEM, default_backend())
         if ca_pem.subject == client_license.issuer:
             verifier = ca_pem.public_key().verifier(
@@ -95,17 +99,33 @@ class LicenseDetailView(View):
             verifier.update(client_license.tbs_certificate_bytes)
             try:
                 verifier.verify()
-                return True
+                valid = True
             except e:
                 logger.warning(e)
-        return False
+                valid = False
+
+        # check if public key in client_cert matches client's private key
+        if valid and check_pubkey:
+            with open(settings.CLIENT_KEY_PATH, 'rb') as f:
+                client_key = serialization.load_pem_private_key(f.read(),
+                    password=None, backend=default_backend())
+            key_numbers = client_key.public_key().public_numbers()
+            lic_numbers = client_license.public_key().public_numbers()
+            valid = key_numbers == lic_numbers
+
+        # check if client_cert not expired
+        if valid:
+            now = datetime.now()
+            valid = client_license.not_valid_after > now
+
+        return valid
 
     def post(self, request, *args, **kwargs):
         license_file = request.FILES.get('license-file')
         license_content = license_file.read()
         try:
             client_license = x509.load_pem_x509_certificate(license_content, default_backend())
-            if self.check_signature(client_license):
+            if self.verify(client_license):
                 License.objects.create(
                     valid_from=pytz.utc.localize(client_license.not_valid_before),
                     valid_till=pytz.utc.localize(client_license.not_valid_after),

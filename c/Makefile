@@ -1,4 +1,5 @@
 LIB=libvcmylicense.so
+LIB_VERSION=1.0.0
 EX_LIBS=-lvcmylicense -lcrypto
 
 .PHONY: test clean
@@ -6,7 +7,8 @@ EX_LIBS=-lvcmylicense -lcrypto
 all: $(LIB) test_save_req test_verify_cert
 
 $(LIB):
-	gcc -Wall -Werror -fPIC -shared -I. vcmy/license.c -o $@
+	gcc -Wall -Werror -fPIC -shared -I. vcmy/license.c -o $@.$(LIB_VERSION)
+	ln -s $@.$(LIB_VERSION) $@
 
 test_save_req: $(LIB)
 	gcc -Wall -Werror -I. -L. test/$@.c -o $@ $(EX_LIBS)
@@ -26,4 +28,4 @@ cleancert:
 	rm -f client.lic
 
 clean: cleanreq cleancert
-	rm -f $(LIB) test_save_req test_verify_cert
+	rm -f $(LIB) $(LIB).$(LIB_VERSION) test_save_req test_verify_cert
