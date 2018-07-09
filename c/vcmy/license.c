@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <time.h>
 #include <openssl/bn.h>
 #include <openssl/rsa.h>
 #include <openssl/evp.h>
@@ -107,7 +108,7 @@ int vcmy_save_x509_req(EVP_PKEY *pkey, const char *szPath)
     if (ret != 1) goto end;
 
     ret = X509_REQ_sign(x509_req, pkey, EVP_sha256());
-    if (ret != 1) goto end;
+    if (ret == 0) goto end;
 
     out = BIO_new_file(szPath, "w");
     ret = PEM_write_bio_X509_REQ(out, x509_req);
@@ -129,12 +130,14 @@ X509 *vcmy_load_x509_cert(const char *szPath)
     return x509_cert;
 }
 
-int vcmy_verify_x509_cert(X509 *ca_cert, X509 *client_cert)
+int vcmy_verify_x509_cert(X509 *ca_cert, X509 *client_cert,
+        const int check_pubkey, const EVP_PKEY *pkey)
 {
     int ret = 0;
     X509_STORE *store = NULL;
     X509_STORE_CTX *ctx = NULL;
 
+    // check if client_cert signed by ca
     store = X509_STORE_new();
     ret = X509_STORE_add_cert(store, ca_cert);
     if (ret != 1) goto end;
@@ -143,6 +146,19 @@ int vcmy_verify_x509_cert(X509 *ca_cert, X509 *client_cert)
     ret = X509_STORE_CTX_init(ctx, store, client_cert, NULL);
     if (ret != 1) goto end;
     ret = X509_verify_cert(ctx);
+
+    // check if public key in client_cert matches client's private key
+    if ((ret == 1) && check_pubkey) {
+        EVP_PKEY *client_pkey = X509_get0_pubkey(client_cert);
+        ret = EVP_PKEY_cmp(pkey, client_pkey);
+    }
+
+    // check if client_cert not expired
+    if (ret == 1) {
+        time_t now = time(NULL);
+        const ASN1_TIME *notAfter = X509_get0_notAfter(client_cert);
+        ret = ASN1_UTCTIME_cmp_time_t(notAfter, now) == 1;
+    }
 
 end:
     X509_STORE_CTX_free(ctx);

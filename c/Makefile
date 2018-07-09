@@ -1,5 +1,5 @@
-LIB=liblicense.so
-EX_LIBS=-llicense -lcrypto
+LIB=libvcmylicense.so
+EX_LIBS=-lvcmylicense -lcrypto
 
 .PHONY: test clean
 
@@ -16,7 +16,8 @@ test_verify_cert: $(LIB)
 
 test: test_save_req test_verify_cert
 	LD_LIBRARY_PATH=. ./test_save_req client.key client.req
-	LD_LIBRARY_PATH=. ./test_verify_cert ca.pem client.lic
+	LD_LIBRARY_PATH=. ./test_verify_cert ca.pem client.lic 1 client.key
+	LD_LIBRARY_PATH=. ./test_verify_cert ca.pem client.lic 0
 
 cleanreq:
 	rm -f client.key client.req
