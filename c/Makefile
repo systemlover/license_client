@@ -2,7 +2,13 @@ LIB=libvcmylicense.so
 LIB_VERSION=1.0.0
 EX_LIBS=-lvcmylicense -lcrypto
 
-.PHONY: test clean
+ifneq ($(wildcard /usr/lib64),)
+	LIB_DIR=/usr/lib64
+else
+	LIB_DIR=/usr/lib
+endif
+
+.PHONY: test clean install uninstall
 
 all: $(LIB) test_save_req test_verify_cert
 
@@ -29,3 +35,10 @@ cleancert:
 
 clean: cleanreq cleancert
 	rm -f $(LIB) $(LIB).$(LIB_VERSION) test_save_req test_verify_cert
+
+install: all
+	cp $(LIB).$(LIB_VERSION) $(LIB_DIR)
+	ln -sf $(LIB_DIR)/$(LIB).$(LIB_VERSION) $(LIB_DIR)/$(LIB)
+
+uninstall:
+	rm -f $(LIB_DIR)/$(LIB)*

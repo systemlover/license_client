@@ -11,6 +11,14 @@
 
 #include "vcmy/license.h"
 
+#ifndef X509_get0_pubkey
+#  define X509_get0_pubkey X509_get_pubkey
+#endif
+
+#ifndef X509_get0_notAfter
+#  define X509_get0_notAfter X509_get_notAfter
+#endif
+
 int vcmy_exists(const char *filename)
 {
     return access(filename, F_OK) != -1;

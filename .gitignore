@@ -11,6 +11,10 @@ java/target/
 client.key
 client.req
 
+c/libvcmylicense.so*
+c/test_save_req
+c/test_verify_cert
+
 build/
 dist/
 vcmy_license.egg-info/
