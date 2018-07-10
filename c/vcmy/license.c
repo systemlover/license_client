@@ -19,9 +19,9 @@
 #  define X509_get0_notAfter X509_get_notAfter
 #endif
 
-int vcmy_exists(const char *filename)
+int vcmy_exists(const char *szPath)
 {
-    return access(filename, F_OK) != -1;
+    return access(szPath, F_OK) != -1;
 }
 
 EVP_PKEY *vcmy_generate_key(const char *szPath)

@@ -8,7 +8,7 @@ extern "C" {
 /*
  * Check if the file exists
  */
-extern int vcmy_exists(const char *filename);
+extern int vcmy_exists(const char *szPath);
 
 /*
  * Generate RSA private key
